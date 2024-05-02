@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-import typing
+from typing import Mapping, Any, Optional
 
-T = typing.TypeVar('T')
-
-def safely_get_value(dct: typing.Mapping, key: typing.Any, default: typing.Union[T, None] = None) -> typing.Union[typing.Any, T]:
+def safely_get_value(dct: Mapping, key: Any, default: Optional[Any] = None) -> Any:
     if key in dct:
         return dct[key]
     else:
