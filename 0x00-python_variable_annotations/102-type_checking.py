@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 
-from typing import Tuple, List
+from typing import List, Tuple, Any
 
-def zoom_array(lst: Tuple[int], factor: int = 2) -> List[int]:
-    return [item for item in lst for _ in range(factor)]
+def zoom_array(lst: List[Any], factor: int = 2) -> List[Any]:
+    zoomed_in: List[Any] = [
+        item for item in lst
+        for i in range(factor)
+    ]
+    return zoomed_in
 
-array: Tuple[int, int, int] = (12, 72, 91)
+
+array = [12, 72, 91]
 
 zoom_2x = zoom_array(array)
 
