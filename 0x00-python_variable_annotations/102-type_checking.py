@@ -7,7 +7,6 @@ This script defines a function to zoom in on the elements of a tuple by repeatin
 
 from typing import Tuple, List
 
-
 def zoom_array(lst: Tuple[int], factor: int = 2) -> List[int]:
     """
     Zooms in on the elements of a tuple by repeating each element 'factor' times.
