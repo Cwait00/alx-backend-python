@@ -5,7 +5,6 @@
 This module provides a function to convert a float number to its string representation.
 """
 
-
 def to_str(n: float) -> str:
     """
     Converts a float number to its string representation.
