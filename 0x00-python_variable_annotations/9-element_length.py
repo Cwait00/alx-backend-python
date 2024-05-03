@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
+
+"""
+This module provides a function to compute the length of elements in an iterable of sequences.
+"""
+
+
 from typing import Iterable, Sequence, Tuple, List
+
 
 def element_length(lst: Iterable[Sequence]) -> List[Tuple[Sequence, int]]:
     """
