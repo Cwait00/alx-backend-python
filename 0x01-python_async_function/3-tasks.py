@@ -7,7 +7,6 @@ Module: 3-tasks
 This module provides a function task_wait_random to create an asyncio task for wait_random coroutine.
 """
 
-
 import asyncio
 from typing import Callable
 
