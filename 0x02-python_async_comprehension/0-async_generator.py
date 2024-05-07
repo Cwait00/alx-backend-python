@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
-
 import asyncio
 import random
+
+
+"""
+This module provides a coroutine that generates a sequence of random numbers.
+"""
+
 
 async def async_generator():
     """
@@ -15,3 +20,6 @@ async def async_generator():
     for _ in range(10):
         await asyncio.sleep(1)
         yield random.randint(0, 10)
+
+
+# Add two blank lines at the end of the file # noqa
