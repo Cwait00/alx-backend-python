@@ -4,7 +4,6 @@
 2-measure_runtime module
 """
 
-
 import asyncio
 from typing import List
 
