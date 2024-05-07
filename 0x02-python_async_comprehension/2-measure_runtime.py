@@ -37,8 +37,8 @@ async def measure_runtime() -> float:
     flattened_tasks = [item for sublist in tasks for item in sublist]
 
     # Calculate the total runtime
-    total_runtime = sum(flattened_tasks)
+    total_runtime = sum(flattened_tasks) / len(flattened_tasks)
 
     return total_runtime
 
-# empty line added at the end
+# empty line added at the ending
