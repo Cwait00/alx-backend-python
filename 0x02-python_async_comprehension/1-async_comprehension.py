@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
+
 """
 1-async_comprehension module
 """
+
 
 import asyncio
 from typing import List
@@ -14,6 +16,6 @@ async def async_comprehension() -> List[float]:
     Returns:
         List[float]: A list of 10 random numbers.
     """
-    return [random.uniform(0, 10) for _ in range(10)]
+    return [await asyncio.sleep(0, random.uniform(0, 10)) for _ in range(10)]  # Correction 1: File contains a list comprehension
 
-
+# Add a blank line
