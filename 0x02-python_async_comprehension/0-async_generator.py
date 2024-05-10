@@ -2,6 +2,7 @@
 
 import asyncio
 import random
+from typing import Generator
 
 
 """
@@ -9,7 +10,7 @@ This module provides a coroutine that generates a sequence of random numbers.
 """
 
 
-async def async_generator():
+async def async_generator() -> Generator[float, None, None]:
     """
     This coroutine generates a sequence of random numbers.
 
