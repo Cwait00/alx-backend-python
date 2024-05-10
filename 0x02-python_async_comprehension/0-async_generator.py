@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-import asyncio
-import random
-from typing import Generator
-
-
 """
 This module provides a coroutine that generates a sequence of random numbers.
 """
+
+
+import asyncio
+import random
+from typing import Generator
 
 
 async def async_generator() -> Generator[float, None, None]:
