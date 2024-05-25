@@ -3,56 +3,36 @@ import unittest
 from unittest.mock import patch
 from client import GithubOrgClient
 
-# Mock function or object to replace org() behavior
-mock_get_json = unittest.mock.Mock()
-
 
 class TestGithubOrgClient(unittest.TestCase):
 
     @patch('client.get_json')
-    def test_org(self, mock_get_json):
-        """Test that GithubOrgClient.org returns the correct value."""
-        # Mock payload
-        org_name = "testorg"
-        expected_json = {"login": org_name}
+    def test_public_repos(self, mock_get_json):
+        """Test GithubOrgClient.public_repos method."""
 
-        # Configure mock behavior
-        mock_get_json.return_value = expected_json
+        mock_payload = [
+            {'name': 'repo1'},
+            {'name': 'repo2'},
+            {'name': 'repo3'}
+        ]
 
-        # Initialize the client
-        client = GithubOrgClient(org_name)
+        mock_get_json.return_value = mock_payload
 
-        # Call the org method
-        result = client.org()
+        with patch(
+            'client.GithubOrgClient._public_repos_url',
+            new_callable=property
+        ) as mock_public_repos_url:
+            mock_public_repos_url.return_value = 'https://mocked-url.com'
 
-        # Assert that get_json was called once with the expected URL
-        expected_url = f"https://api.github.com/orgs/{org_name}"
-        mock_get_json.assert_called_once_with(expected_url)
+            client = GithubOrgClient('test_org')
+            result = client.public_repos()
 
-        # Assert that the org method returns the expected JSON
-        self.assertEqual(result, expected_json)
-
-    @patch('client.GithubOrgClient.org', new_callable=lambda: mock_get_json)
-    def test_public_repos_url(self, mock_org):
-        """Test _public_repos_url property of GithubOrgClient."""
-        # Mock org payload
-        org_name = "testorg"
-        expected_payload = {"login": org_name}
-
-        # Set the return value of the mock_org property to the expected payload
-        mock_org.return_value = expected_payload
-
-        # Initialize the client
-        client = GithubOrgClient(org_name)
-
-        # Access the _public_repos_url property
-        public_repos_url = client._public_repos_url
-
-        # Expected URL based on the mocked payload
-        expected_url = f"https://api.github.com/orgs/{org_name}/repos"
-
-        # Assert that the property returns the correct URL
-        self.assertEqual(public_repos_url, expected_url)
+            self.assertEqual(result, ['repo1', 'repo2', 'repo3'])
+            mock_get_json.assert_called_once()
+            self.assertEqual(
+                mock_get_json.call_args[0][0],
+                'https://mocked-url.com'
+            )
 
 
 if __name__ == '__main__':
