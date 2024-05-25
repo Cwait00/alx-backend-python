@@ -1,38 +1,34 @@
 #!/usr/bin/env python3
 import unittest
 from unittest.mock import patch
+from parameterized import parameterized
 from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
-
+    @parameterized.expand([
+        ("google", {"login": "google"}),
+        ("abc", {"login": "abc"}),
+    ])
     @patch('client.get_json')
-    def test_public_repos(self, mock_get_json):
-        """Test GithubOrgClient.public_repos method."""
+    def test_org(self, org_name, expected_json, mock_get_json):
+        """Test that GithubOrgClient.org returns the correct value."""
+        # Set up the mock to return the expected JSON
+        mock_get_json.return_value = expected_json
 
-        mock_payload = [
-            {'name': 'repo1'},
-            {'name': 'repo2'},
-            {'name': 'repo3'}
-        ]
+        # Initialize the client
+        client = GithubOrgClient(org_name)
 
-        mock_get_json.return_value = mock_payload
+        # Call the org method
+        result = client.org()
 
-        with patch(
-            'client.GithubOrgClient._public_repos_url',
-            new_callable=property
-        ) as mock_public_repos_url:
-            mock_public_repos_url.return_value = 'https://mocked-url.com'
+        # Assert that get_json was called once with the expected URL
+        mock_get_json.assert_called_once_with(
+            f"https://api.github.com/orgs/{org_name}"
+        )
 
-            client = GithubOrgClient('test_org')
-            result = client.public_repos()
-
-            self.assertEqual(result, ['repo1', 'repo2', 'repo3'])
-            mock_get_json.assert_called_once()
-            self.assertEqual(
-                mock_get_json.call_args[0][0],
-                'https://mocked-url.com'
-            )
+        # Assert that the org method returns the expected JSON
+        self.assertEqual(result, expected_json)
 
 
 if __name__ == '__main__':
