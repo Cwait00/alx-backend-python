@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import unittest
 from unittest.mock import patch, MagicMock, PropertyMock
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -74,6 +75,61 @@ class TestGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient('test_org')
         result = client.has_license(repo, license_key)
         self.assertEqual(result, expected)
+
+    def test_public_repos_with_license(self):
+        """Test GithubOrgClient.public_repos with license='apache-2.0'."""
+        with patch('client.get_json') as mock_get_json:
+            mock_get_json.return_value = apache2_repos
+
+            client = GithubOrgClient('test_org')
+            repos = client.public_repos(license='apache-2.0')
+
+            mock_get_json.assert_called_once_with(
+                'https://api.github.com/orgs/test_org/repos'
+            )
+            self.assertEqual(repos, apache2_repos)
+
+
+@parameterized_class([
+    {
+        "org_payload": org_payload,
+        "repos_payload": repos_payload,
+        "expected_repos": expected_repos,
+        "apache2_repos": apache2_repos,
+    }
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration test for GithubOrgClient.public_repos"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up the integration test class"""
+        cls.get_patcher = patch('requests.get')
+        mock_get = cls.get_patcher.start()
+
+        mock_get.side_effect = cls.side_effect
+
+    @classmethod
+    def tearDownClass(cls):
+        """Tear down the integration test class"""
+        cls.get_patcher.stop()
+
+    @staticmethod
+    def side_effect(url):
+        """Side effect method for requests.get"""
+        if url == 'https://api.github.com/orgs/test_org':
+            return MagicMock(json=lambda: org_payload)
+        elif url == 'https://api.github.com/orgs/test_org/repos':
+            return MagicMock(json=lambda: repos_payload)
+        return MagicMock(json=lambda: None)
+
+    def test_public_repos(self):
+        """Test the public_repos method"""
+        client = GithubOrgClient('test_org')
+        self.assertEqual(client.public_repos(), expected_repos)
+        self.assertEqual(
+            client.public_repos(license="apache-2.0"), apache2_repos
+        )
 
 
 if __name__ == '__main__':
