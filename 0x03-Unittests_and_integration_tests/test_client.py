@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import unittest
-from unittest.mock import patch, MagicMock, PropertyMock
+from unittest.mock import patch, PropertyMock, MagicMock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
@@ -76,19 +76,6 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client.has_license(repo, license_key)
         self.assertEqual(result, expected)
 
-    def test_public_repos_with_license(self):
-        """Test GithubOrgClient.public_repos with license='apache-2.0'."""
-        with patch('client.get_json') as mock_get_json:
-            mock_get_json.return_value = apache2_repos
-
-            client = GithubOrgClient('test_org')
-            repos = client.public_repos(license='apache-2.0')
-
-            mock_get_json.assert_called_once_with(
-                'https://api.github.com/orgs/test_org/repos'
-            )
-            self.assertEqual(repos, apache2_repos)
-
 
 @parameterized_class([
     {
@@ -126,9 +113,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def test_public_repos(self):
         """Test the public_repos method"""
         client = GithubOrgClient('test_org')
-        self.assertEqual(client.public_repos(), expected_repos)
+        self.assertEqual(client.public_repos(), self.expected_repos)
         self.assertEqual(
-            client.public_repos(license="apache-2.0"), apache2_repos
+            client.public_repos(license="apache-2.0"), self.apache2_repos
         )
 
 
