@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import unittest
-from unittest.mock import patch, PropertyMock, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
@@ -113,13 +113,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def test_public_repos(self):
         """Test the public_repos method"""
         client = GithubOrgClient('test_org')
-        self.assertEqual(client.public_repos(), self.expected_repos)
-
-    def test_public_repos_with_license(self):
-        """Test public_repos with the license argument"""
-        client = GithubOrgClient('test_org')
+        self.assertEqual(client.public_repos(), expected_repos)
         self.assertEqual(
-            client.public_repos(license="apache-2.0"), self.apache2_repos
+            client.public_repos(license="apache-2.0"), apache2_repos
         )
 
 
