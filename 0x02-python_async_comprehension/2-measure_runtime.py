@@ -10,6 +10,7 @@ from typing import List
 
 async_comprehension = __import__('1-async_comprehension').async_comprehension
 
+
 async def measure_runtime() -> float:
     """
     Measure the total runtime of executing async_comprehension
@@ -35,4 +36,4 @@ async def measure_runtime() -> float:
 
 if __name__ == "__main__":
     runtime = asyncio.run(measure_runtime())
-    print(f"Total runtime: {runtime:.2f} seconds")
+    print(f"Total runtime: {runtime:.10f} seconds")
